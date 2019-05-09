@@ -14,13 +14,13 @@
 package boltdb
 
 import (
+	"github.com/totalgo/mysqlgogogo/engine"
+	"log"
 	"os"
 	"path"
 
 	"github.com/boltdb/bolt"
 	"github.com/juju/errors"
-	"github.com/pingcap/tidb/store/localstore/engine"
-	"github.com/pingcap/tidb/terror"
 )
 
 var (
@@ -192,7 +192,7 @@ func (driver Driver) Open(dbPath string) (engine.DB, error) {
 
 	if _, err = tx.CreateBucketIfNotExists(bucketName); err != nil {
 		err1 := tx.Rollback()
-		terror.Log(errors.Trace(err1))
+		log.Println(errors.Trace(err1))
 		return nil, errors.Trace(err)
 	}
 

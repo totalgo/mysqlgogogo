@@ -14,10 +14,10 @@
 package goleveldb
 
 import (
+	"github.com/totalgo/mysqlgogogo/engine"
 	"testing"
 
 	. "github.com/pingcap/check"
-	"github.com/pingcap/tidb/store/localstore/engine"
 	"github.com/pingcap/tidb/util/testleak"
 )
 

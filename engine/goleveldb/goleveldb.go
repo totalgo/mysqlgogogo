@@ -14,14 +14,14 @@
 package goleveldb
 
 import (
+	"github.com/totalgo/mysqlgogogo/engine"
 	"sync"
 
 	"github.com/juju/errors"
-	"github.com/pingcap/goleveldb/leveldb"
-	"github.com/pingcap/goleveldb/leveldb/opt"
-	"github.com/pingcap/goleveldb/leveldb/storage"
-	"github.com/pingcap/goleveldb/leveldb/util"
-	"github.com/pingcap/tidb/store/localstore/engine"
+	"github.com/syndtr/goleveldb/leveldb"
+	"github.com/syndtr/goleveldb/leveldb/opt"
+	"github.com/syndtr/goleveldb/leveldb/storage"
+	"github.com/syndtr/goleveldb/leveldb/util"
 )
 
 var (

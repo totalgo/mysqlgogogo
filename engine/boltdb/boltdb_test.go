@@ -15,12 +15,12 @@ package boltdb
 
 import (
 	"fmt"
+	"github.com/totalgo/mysqlgogogo/engine"
 	"os"
 	"testing"
 
 	"github.com/boltdb/bolt"
 	. "github.com/pingcap/check"
-	"github.com/pingcap/tidb/store/localstore/engine"
 	"github.com/pingcap/tidb/util/testleak"
 )
 
