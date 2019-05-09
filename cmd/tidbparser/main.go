@@ -18,7 +18,14 @@ func main() {
 		switch v.(type) {
 		case *ast.ShowStmt:
 			v1 := v.(*ast.ShowStmt)
-			log.Printf("%#v", v1.Tp)
+			switch v1.Tp {
+			case ast.ShowDatabases:
+				log.Println("show databases")
+			case ast.ShowTables:
+				log.Println("show tables")
+			default:
+				log.Println("unknown")
+			}
 		default:
 			log.Println(v)
 		}
