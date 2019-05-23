@@ -211,12 +211,12 @@ func (c *ClientConn) Run() {
 	}
 }
 
-
 func (c *ClientConn) buildResultset(fields []*mysql.Field, names []string, values [][]interface{}) (*mysql.Resultset, error) {
 	var ExistFields bool
 	r := new(mysql.Resultset)
 
 	r.Fields = make([]*mysql.Field, len(names))
+
 	r.FieldNames = make(map[string]int, len(names))
 
 	//use the field def that get from true database
@@ -271,6 +271,9 @@ func (c *ClientConn) buildResultset(fields []*mysql.Field, names []string, value
 }
 
 func (c *ClientConn) writeData(columns []string, data [][]interface{}) error {
+	if data == nil || len(data) == 0 {
+		return c.writeOK(nil)
+	}
 	rs, err := c.buildResultset(nil, columns, data)
 	if err != nil {
 		return c.writeError(err)

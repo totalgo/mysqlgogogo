@@ -5,9 +5,12 @@ import (
 	"fmt"
 	"github.com/pingcap/parser"
 	"github.com/pingcap/parser/ast"
+	"github.com/pingcap/tidb/types"
+	"github.com/pingcap/tidb/types/parser_driver"
 	_ "github.com/pingcap/tidb/types/parser_driver"
 	"log"
 	"reflect"
+	"strconv"
 )
 
 func (c *ClientConn) handleUseDB(db string) (err error) {
@@ -40,9 +43,30 @@ func (c *ClientConn) handleQuery(sql string) (err error) {
 					schemas = append(schemas, []interface{}{v.Name})
 				}
 				c.writeData([]string{"Databases"}, schemas)
+			case ast.ShowVariables:
+				data := [][]interface{}{}
+				iter := c.s.schema.Db.NewIterator(nil, nil)
+				data = append(data, []interface{}{"1", "2"})
+				for iter.Next() {
+					data1 := []interface{}{string(iter.Key()), string(iter.Value())}
+					data = append(data, data1)
+				}
+				c.writeData([]string{"Key", "value"}, data)
 			default:
 				c.writeError(errors.New(fmt.Sprintf("%s statement not supported show", reflect.TypeOf(stmt))))
 			}
+		case *ast.SetStmt:
+			log.Printf("%#v\n", stmt1.Variables[0].Value)
+			if v, ok := stmt1.Variables[0].Value.(*driver.ValueExpr); ok {
+				log.Println(stmt1.Variables[0].Name, v.Datum.GetString())
+				switch v.Kind() {
+				case types.KindInt64:
+					c.s.schema.Db.Put([]byte(stmt1.Variables[0].Name), []byte(strconv.Itoa(int(v.Datum.GetInt64()))), nil)
+				default:
+					c.s.schema.Db.Put([]byte(stmt1.Variables[0].Name), []byte(v.Datum.GetString()), nil)
+				}
+			}
+			c.writeOK(nil)
 		case *ast.CreateDatabaseStmt:
 			log.Println("do create database ", stmt1.Name)
 			c.writeError(c.s._createDatabase(stmt1.Name))
